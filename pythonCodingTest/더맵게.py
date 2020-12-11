@@ -12,6 +12,9 @@ K는 0 이상 1,000,000,000 이하입니다.
 scoville의 원소는 각각 0 이상 1,000,000 이하입니다.
 모든 음식의 스코빌 지수를 K 이상으로 만들 수 없는 경우에는 -1을 return 합니다.
 """
+'''
+최초 코딩
+
 def solution(scoville, K):
     answer = 0
     scoville.sort()
@@ -27,20 +30,22 @@ def solution(scoville, K):
         answer = -1
     return answer
 
-
 '''
-
-def solution(hot,k):
-    hot.sort()
-    cnt = 0
-    for i in range(len(hot)-1):
-        if hot[i] < k:
-            hot[i+1] = (hot[i+1]*2) + hot[i]
-            hot.sort()
-            cnt+=1
+# 최종 코딩
+import heapq                 # 시간복잡도를 줄이기 위한 heapq 사용
+def solution(scoville, K):
+    answer = 0
+    item = 0
+    heapq.heapify(scoville)
+    while True:
+        if len(scoville) == 1:
+            break
+        if scoville[0] < K:           # while 문 안에서 min함수 사용시 반복 횟수만큼 작동하기 때문에 자원의 손실이 큼 따라서 heapq의 성질을 이용한 첫번째 인덱스 사용
+            item = heapq.heappop(scoville) + heapq.heappop(scoville)*2
+            heapq.heappush(scoville, item)
+            answer += 1
         else:
-            break  
-    if hot[-1] < k:
-        return -1
-    return cnt
-'''
+            break
+    if max(scoville) < K:
+        answer = -1
+    return answer
